@@ -1,65 +1,159 @@
-import Image from "next/image";
+import CafeCard from "../components/CafeCard";
+import Navbar from "../components/Navbar";
+import ServiceCard from "../components/ServiceCard";
+import StatsCard from "../components/StatsCard";
+import UploadBox from "../components/UploadBox";
+
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen text-white bg-black relative overflow-hidden">
+
+      <Navbar />
+
+      <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-purple-500 rounded-full blur-[120px] opacity-20"></div>
+
+      <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-blue-500 rounded-full blur-[120px] opacity-20"></div>
+
+      <section className="flex flex-col items-center justify-center text-center mt-40 px-4">
+
+        <h1 className="text-6xl font-bold leading-tight">
+          Print, Xerox & <br /> Form Fill-up Online
+        </h1>
+
+        <p className="mt-6 text-gray-400 max-w-2xl text-lg">
+          Upload documents, choose nearby cafes, and get your work done without waiting in long lines.
+        </p>
+
+        <div className="flex gap-4 mt-8">
+
+          <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold">
+            Get Started
+          </button>
+
+          <button className="border border-gray-700 px-6 py-3 rounded-xl">
+            Explore Cafes
+          </button>
+
+        </div>
+
+      </section>
+
+      <section className="px-10 mt-40">
+
+        <div className="text-center mb-14">
+
+          <h2 className="text-5xl font-bold">
+            Our Services
+          </h2>
+
+          <p className="text-gray-400 mt-4">
+            Everything you need from nearby cafes in one place.
           </p>
+
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <ServiceCard
+            title="Online Print"
+            description="Upload PDF files and get printouts without standing in long queues."
+          />
+
+          <ServiceCard
+            title="Form Fill-up"
+            description="Submit documents online and let cafe owners complete your forms."
+          />
+
+          <ServiceCard
+            title="Home Delivery"
+            description="Get printed documents delivered directly to your home."
+          />
+
         </div>
-      </main>
-    </div>
+
+      </section>
+
+      <section className="px-10 mt-40">
+
+        <div className="flex items-center justify-between mb-10">
+
+          <h2 className="text-4xl font-bold">
+            Nearby Cafes
+          </h2>
+
+          <button className="border border-gray-700 px-5 py-2 rounded-xl">
+            View All
+          </button>
+
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <CafeCard
+            name="Print Hub"
+            location="Naksalbari, Darjeeling"
+            rating="4.8"
+          />
+
+          <CafeCard
+            name="Cyber Point"
+            location="Siliguri"
+            rating="4.6"
+          />
+
+          <CafeCard
+            name="Smart Cafe"
+            location="Bagdogra"
+            rating="4.9"
+          />
+
+        </div>
+
+      </section>
+
+      <section className="px-10 mt-40 pb-32">
+
+        <div className="text-center mb-14">
+
+          <h2 className="text-5xl font-bold">
+            Trusted By Thousands
+          </h2>
+
+          <p className="text-gray-400 mt-4">
+            Fast, reliable and easy cafe services.
+          </p>
+
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+
+          <StatsCard
+            number="500+"
+            label="Orders Completed"
+          />
+
+          <StatsCard
+            number="50+"
+            label="Partner Cafes"
+          />
+
+          <StatsCard
+            number="24/7"
+            label="Customer Support"
+          />
+
+        </div>
+
+      </section>
+
+      {/* UploadBox Section */}
+      <section className="px-10 mt-40 pb-32">
+
+        <UploadBox />
+
+      </section>
+
+    </main>
   );
 }
