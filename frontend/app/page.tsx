@@ -1,20 +1,45 @@
+"use client";
+
+// =========================
+// React Imports
+// =========================
+import { useState } from "react";
+
+// =========================
+// Components Imports
+// =========================
 import CafeCard from "../components/CafeCard";
 import Navbar from "../components/Navbar";
 import ServiceCard from "../components/ServiceCard";
 import StatsCard from "../components/StatsCard";
 import UploadBox from "../components/UploadBox";
 
-
 export default function Home() {
+
+  // =========================
+  // Selected Cafe State
+  // =========================
+  const [selectedCafe, setSelectedCafe] = useState("");
+
   return (
+
     <main className="min-h-screen text-white bg-black relative overflow-hidden">
 
+      {/* =========================
+          Navbar
+      ========================= */}
       <Navbar />
 
+      {/* =========================
+          Background Glow Effects
+      ========================= */}
       <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] bg-purple-500 rounded-full blur-[120px] opacity-20"></div>
 
       <div className="absolute bottom-[-200px] right-[-200px] w-[500px] h-[500px] bg-blue-500 rounded-full blur-[120px] opacity-20"></div>
 
+      {/* =========================
+          Hero Section
+      ========================= */}
       <section className="flex flex-col items-center justify-center text-center mt-40 px-4">
 
         <h1 className="text-6xl font-bold leading-tight">
@@ -25,6 +50,7 @@ export default function Home() {
           Upload documents, choose nearby cafes, and get your work done without waiting in long lines.
         </p>
 
+        {/* Hero Buttons */}
         <div className="flex gap-4 mt-8">
 
           <button className="bg-white text-black px-6 py-3 rounded-xl font-semibold">
@@ -39,6 +65,9 @@ export default function Home() {
 
       </section>
 
+      {/* =========================
+          Services Section
+      ========================= */}
       <section className="px-10 mt-40">
 
         <div className="text-center mb-14">
@@ -53,6 +82,7 @@ export default function Home() {
 
         </div>
 
+        {/* Services Grid */}
         <div className="grid md:grid-cols-3 gap-6">
 
           <ServiceCard
@@ -74,8 +104,12 @@ export default function Home() {
 
       </section>
 
+      {/* =========================
+          Nearby Cafes Section
+      ========================= */}
       <section className="px-10 mt-40">
 
+        {/* Section Header */}
         <div className="flex items-center justify-between mb-10">
 
           <h2 className="text-4xl font-bold">
@@ -88,30 +122,62 @@ export default function Home() {
 
         </div>
 
+        {/* Cafe Cards Grid */}
         <div className="grid md:grid-cols-3 gap-6">
 
+          {/* Cafe 1 */}
           <CafeCard
             name="Print Hub"
             location="Naksalbari, Darjeeling"
             rating="4.8"
+            distance="1.2 km"
+            isOpen={true}
+            selected={selectedCafe === "Print Hub"}
+            onSelect={() => setSelectedCafe("Print Hub")}
           />
 
+          {/* Cafe 2 */}
           <CafeCard
             name="Cyber Point"
             location="Siliguri"
             rating="4.6"
+            distance="2.8 km"
+            isOpen={true}
+            selected={selectedCafe === "Cyber Point"}
+            onSelect={() => setSelectedCafe("Cyber Point")}
           />
 
+          {/* Cafe 3 */}
           <CafeCard
             name="Smart Cafe"
             location="Bagdogra"
             rating="4.9"
+            distance="4.5 km"
+            isOpen={false}
+            selected={selectedCafe === "Smart Cafe"}
+            onSelect={() => setSelectedCafe("Smart Cafe")}
           />
 
         </div>
 
+        {/* Selected Cafe Message */}
+        {selectedCafe && (
+
+          <div className="mt-8 bg-green-500/10 border border-green-500 rounded-2xl p-5">
+
+            <p className="text-green-400 text-lg font-medium">
+              Selected Cafe: {selectedCafe}
+            </p>
+
+          </div>
+
+        )}
+
       </section>
 
+      {/* =========================
+          Stats Section
+      ========================= */}
       <section className="px-10 mt-40 pb-32">
 
         <div className="text-center mb-14">
@@ -126,6 +192,7 @@ export default function Home() {
 
         </div>
 
+        {/* Stats Grid */}
         <div className="grid md:grid-cols-3 gap-6">
 
           <StatsCard
@@ -147,13 +214,19 @@ export default function Home() {
 
       </section>
 
-      {/* UploadBox Section */}
+      {/* =========================
+          Upload Section
+      ========================= */}
       <section className="px-10 mt-40 pb-32">
 
-        <UploadBox />
+        <UploadBox
+          selectedCafe={selectedCafe}
+        />
 
       </section>
 
     </main>
+
   );
+
 }
