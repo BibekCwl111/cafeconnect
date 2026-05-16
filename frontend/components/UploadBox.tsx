@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function UploadBox() {
+type UploadBoxProps = {
+  selectedCafe: string;
+};
+
+export default function UploadBox({
+  selectedCafe,
+}: UploadBoxProps) {
 
   // =========================
   // Selected File State
@@ -21,6 +27,18 @@ export default function UploadBox() {
   const [deliveryMethod, setDeliveryMethod] = useState("pickup");
 
   // =========================
+  // Order Success State
+  // =========================
+  const [orderPlaced, setOrderPlaced] = useState(false);
+
+  // =========================
+  // Random Order ID
+  // =========================
+  const orderId = Math.floor(
+    100000 + Math.random() * 900000
+  );
+
+  // =========================
   // Handle File Selection
   // =========================
   const handleFileChange = (
@@ -28,14 +46,20 @@ export default function UploadBox() {
   ) => {
 
     // No File Selected
-    if (!event.target.files || !event.target.files[0]) {
+    if (
+      !event.target.files ||
+      !event.target.files[0]
+    ) {
       return;
     }
 
     const selectedFile = event.target.files[0];
 
     // Check PDF File
-    if (selectedFile.type !== "application/pdf") {
+    if (
+      selectedFile.type !==
+      "application/pdf"
+    ) {
 
       alert("Only PDF files are allowed!");
 
@@ -55,6 +79,58 @@ export default function UploadBox() {
 
   };
 
+  // =========================
+  // Price Calculation
+  // =========================
+  const basePrice =
+    printType === "color"
+      ? 15
+      : 5;
+
+  const sideExtra =
+    printSide === "double"
+      ? 2
+      : 0;
+
+  const deliveryCharge =
+    deliveryMethod === "delivery"
+      ? 20
+      : 0;
+
+  const totalPrice =
+    (basePrice + sideExtra) *
+      copies +
+    deliveryCharge;
+
+  // =========================
+  // Handle Order Placement
+  // =========================
+  const handlePlaceOrder = () => {
+
+    // No Cafe Selected
+    if (!selectedCafe) {
+
+      alert(
+        "Please select a cafe first!"
+      );
+
+      return;
+    }
+
+    // No File Uploaded
+    if (!file) {
+
+      alert(
+        "Please upload a PDF file!"
+      );
+
+      return;
+    }
+
+    // Order Success
+    setOrderPlaced(true);
+  };
+
   return (
 
     <div className="max-w-3xl mx-auto bg-[#111] border border-gray-800 rounded-3xl p-10">
@@ -69,10 +145,30 @@ export default function UploadBox() {
         </h2>
 
         <p className="text-gray-400 mt-4">
-          Upload documents for printing, xerox or form fill-up.
+          Upload documents for printing,
+          xerox or form fill-up.
         </p>
 
       </div>
+
+      {/* =========================
+          Selected Cafe Alert
+      ========================= */}
+      {selectedCafe && (
+
+        <div className="mt-8 bg-green-500/10 border border-green-500 rounded-2xl p-4">
+
+          <p className="text-green-400 font-medium">
+
+            Selected Cafe:
+            {" "}
+            {selectedCafe}
+
+          </p>
+
+        </div>
+
+      )}
 
       {/* =========================
           Upload Area
@@ -113,7 +209,7 @@ export default function UploadBox() {
       ========================= */}
       {file && (
 
-        <div className="mt-8 bg-black border border-gray-800 rounded-2xl p-5">
+        <div className="mt-8 bg-black border border-gray-800 rounded-2xl p-6">
 
           {/* =========================
               Top Section
@@ -135,7 +231,7 @@ export default function UploadBox() {
             {/* Remove Button */}
             <button
               onClick={removeFile}
-              className="bg-red-500 hover:bg-red-600 transition px-4 py-2 rounded-xl text-white font-medium"
+              className="bg-red-500 hover:bg-red-600 transition px-4 py-2 rounded-xl"
             >
               Remove
             </button>
@@ -154,7 +250,11 @@ export default function UploadBox() {
               </p>
 
               <p className="text-gray-400 text-sm mt-1">
-                {(file.size / 1024 / 1024).toFixed(2)} MB
+
+                {(file.size / 1024 / 1024).toFixed(2)}
+                {" "}
+                MB
+
               </p>
 
             </div>
@@ -169,12 +269,12 @@ export default function UploadBox() {
           {/* =========================
               Print Options
           ========================= */}
-          <div className="mt-6 grid md:grid-cols-3 gap-4">
+          <div className="mt-8 grid md:grid-cols-3 gap-4">
 
             {/* Copies */}
             <div>
 
-              <label className="block text-sm text-gray-400 mb-2">
+              <label className="block mb-2 text-sm text-gray-400">
                 Copies
               </label>
 
@@ -182,7 +282,11 @@ export default function UploadBox() {
                 type="number"
                 min="1"
                 value={copies}
-                onChange={(e) => setCopies(Number(e.target.value))}
+                onChange={(e) =>
+                  setCopies(
+                    Number(e.target.value)
+                  )
+                }
                 className="w-full bg-[#111] border border-gray-700 rounded-xl px-4 py-3 outline-none"
               />
 
@@ -191,13 +295,17 @@ export default function UploadBox() {
             {/* Print Type */}
             <div>
 
-              <label className="block text-sm text-gray-400 mb-2">
+              <label className="block mb-2 text-sm text-gray-400">
                 Print Type
               </label>
 
               <select
                 value={printType}
-                onChange={(e) => setPrintType(e.target.value)}
+                onChange={(e) =>
+                  setPrintType(
+                    e.target.value
+                  )
+                }
                 className="w-full bg-[#111] border border-gray-700 rounded-xl px-4 py-3 outline-none"
               >
 
@@ -216,13 +324,17 @@ export default function UploadBox() {
             {/* Print Side */}
             <div>
 
-              <label className="block text-sm text-gray-400 mb-2">
+              <label className="block mb-2 text-sm text-gray-400">
                 Print Side
               </label>
 
               <select
                 value={printSide}
-                onChange={(e) => setPrintSide(e.target.value)}
+                onChange={(e) =>
+                  setPrintSide(
+                    e.target.value
+                  )
+                }
                 className="w-full bg-[#111] border border-gray-700 rounded-xl px-4 py-3 outline-none"
               >
 
@@ -241,117 +353,100 @@ export default function UploadBox() {
           </div>
 
           {/* =========================
-              Delivary Method
+              Delivery Method
           ========================= */}
-           <div className="mt-6">
+          <div className="mt-8">
 
-             <label className="block text-sm text-gray-400 mb-3">
-                 Delivary Method
-             </label>
+            <h3 className="text-lg font-semibold mb-4">
+              Delivery Method
+            </h3>
 
-             <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-4">
 
-                {/* Self Pickup */}
-                <button
-                    onClick={() => setDeliveryMethod("pickup")}
-                    className={`p-6 rounded-2x1 border cursor-pointer transition
-                    ${
-                        deliveryMethod == "pickup"
-                        ? "border-green-500 bg-green-500/10"
-                        : "border-gray-700 bg-[#111]"
-                    }`}
-                >
+              {/* Pickup Option */}
+              <button
+                onClick={() =>
+                  setDeliveryMethod(
+                    "pickup"
+                  )
+                }
+                className={`border rounded-2xl p-6 text-left transition ${
+                  deliveryMethod ===
+                  "pickup"
+                    ? "border-green-500 bg-green-500/10"
+                    : "border-gray-700 bg-[#111]"
+                }`}
+              >
 
-                <h3 className="text-lg front-semibold">
-                     🏪 Self Pickup
-                </h3>
+                <div className="text-3xl">
+                  🏪
+                </div>
 
-                <p className="text-gray-400 text-sm mt-2">
-                    Collect from cafe
+                <h4 className="text-xl font-semibold mt-4">
+                  Self Pickup
+                </h4>
+
+                <p className="text-gray-400 mt-2">
+                  Collect from cafe
                 </p>
 
-                </button>
+              </button>
 
-                {/* Home Delivery */}
-                <button
-                    onClick={() => setDeliveryMethod("delivery")}
-                    className={`p-6 rounded-2x1 border cursor-pointer transition
-                    ${
-                        deliveryMethod == "delivery"
-                        ? "border-green-500 bg-green-500/10"
-                        : "border-gray-700 bg-[#111]"
-                    }`}
-                >
+              {/* Delivery Option */}
+              <button
+                onClick={() =>
+                  setDeliveryMethod(
+                    "delivery"
+                  )
+                }
+                className={`border rounded-2xl p-6 text-left transition ${
+                  deliveryMethod ===
+                  "delivery"
+                    ? "border-green-500 bg-green-500/10"
+                    : "border-gray-700 bg-[#111]"
+                }`}
+              >
 
-                <h3 className="text-lg front-semibold">
-                     🏠 Home Delivery
-                </h3>
+                <div className="text-3xl">
+                  🏠
+                </div>
 
-                <p className="text-gray-400 text-sm mt-2">
-                    Delivered to your doorstep
+                <h4 className="text-xl font-semibold mt-4">
+                  Home Delivery
+                </h4>
+
+                <p className="text-gray-400 mt-2">
+                  Delivered to your doorstep
                 </p>
 
-                </button>
-             </div>
+              </button>
+
             </div>
 
-          {/* =========================
-              Price Calculation
-          ========================= */}
-          <div className="mt-6 bg-[#111] border border-gray-800 rounded-2xl p-5">
+          </div>
 
-            {/* Top */}
+          {/* =========================
+              Price Summary
+          ========================= */}
+          <div className="mt-8 bg-[#111] border border-gray-800 rounded-2xl p-6">
+
             <div className="flex items-center justify-between">
 
-              <h3 className="text-lg font-semibold">
+              <h3 className="text-2xl font-bold">
                 Estimated Price
               </h3>
 
-              <p className="text-2xl font-bold text-green-400">
-
-                ₹
-                {
-                    (
-                        (
-                            (
-                                printType === "color"
-                                ? 10
-                                : 2
-                            )
-
-                            *
-
-                            copies
-                            
-                            *
-
-                            (
-                                printSide === "double"
-                                ? 1.5
-                                : 1
-                            )
-                        )
-
-                        +
-
-                        (
-                            deliveryMethod === "delivery"
-                            ? 20
-                            : 0
-                        )
-                    ).toFixed(0)
-                }
-
-              </p>
+              <div className="text-4xl font-bold text-green-400">
+                ₹{totalPrice}
+              </div>
 
             </div>
 
-            {/* Price Details */}
-            <div className="mt-4 space-y-2 text-sm text-gray-400">
+            <div className="mt-6 space-y-3">
 
               <div className="flex items-center justify-between">
 
-                <span>
+                <span className="text-gray-400">
                   Print Type
                 </span>
 
@@ -365,7 +460,7 @@ export default function UploadBox() {
 
               <div className="flex items-center justify-between">
 
-                <span>
+                <span className="text-gray-400">
                   Copies
                 </span>
 
@@ -377,7 +472,7 @@ export default function UploadBox() {
 
               <div className="flex items-center justify-between">
 
-                <span>
+                <span className="text-gray-400">
                   Print Side
                 </span>
 
@@ -389,21 +484,131 @@ export default function UploadBox() {
 
               </div>
 
-              <div className="flex item-center justify-between">
+              <div className="flex items-center justify-between">
 
-                <span>
-                    Delivery
+                <span className="text-gray-400">
+                  Delivery
                 </span>
 
                 <span>
-                    {deliveryMethod === "delivery"
+
+                  {deliveryMethod ===
+                  "delivery"
                     ? "Home Delivery (+₹20)"
-                    :"Self Pickup"}
+                    : "Self Pickup"}
+
                 </span>
 
               </div>
 
             </div>
+
+          </div>
+
+          {/* =========================
+              Place Order Button
+          ========================= */}
+          <button
+            onClick={handlePlaceOrder}
+            className="w-full mt-6 bg-green-500 hover:bg-green-600 transition text-black font-bold py-4 rounded-2xl"
+          >
+            Place Order
+          </button>
+
+        </div>
+
+      )}
+
+      {/* =========================
+          Success Modal
+      ========================= */}
+      {orderPlaced && (
+
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-4">
+
+          <div className="bg-[#111] border border-green-500 rounded-3xl p-10 max-w-md w-full text-center">
+
+            {/* Icon */}
+            <div className="text-6xl">
+              ✅
+            </div>
+
+            {/* Heading */}
+            <h2 className="text-3xl font-bold mt-6">
+              Order Placed Successfully!
+            </h2>
+
+            <p className="text-gray-400 mt-3">
+              Your print order has been submitted.
+            </p>
+
+            {/* Order Details */}
+            <div className="mt-8 bg-black rounded-2xl p-5 border border-gray-800 text-left">
+
+              <p className="text-gray-400 text-sm">
+                Order ID
+              </p>
+
+              <h3 className="text-2xl font-bold mt-1">
+                #{orderId}
+              </h3>
+
+              <div className="mt-5 space-y-3">
+
+                <div className="flex items-center justify-between">
+
+                  <span className="text-gray-400">
+                    Cafe
+                  </span>
+
+                  <span>
+                    {selectedCafe}
+                  </span>
+
+                </div>
+
+                <div className="flex items-center justify-between">
+
+                  <span className="text-gray-400">
+                    Delivery
+                  </span>
+
+                  <span>
+
+                    {deliveryMethod ===
+                    "delivery"
+                      ? "Home Delivery"
+                      : "Self Pickup"}
+
+                  </span>
+
+                </div>
+
+                <div className="flex items-center justify-between">
+
+                  <span className="text-gray-400">
+                    Total
+                  </span>
+
+                  <span className="text-green-400 font-bold">
+                    ₹{totalPrice}
+                  </span>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() =>
+                setOrderPlaced(false)
+              }
+              className="w-full mt-8 bg-white text-black py-3 rounded-2xl font-semibold"
+            >
+              Done
+            </button>
 
           </div>
 

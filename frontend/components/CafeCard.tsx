@@ -2,40 +2,86 @@ type CafeCardProps = {
   name: string;
   location: string;
   rating: string;
+  distance: string;
+  isOpen: boolean;
+  selected: boolean;
+  onSelect: () => void;
 };
 
-export default function CafeCard(props: CafeCardProps) {
+export default function CafeCard({
+  name,
+  location,
+  rating,
+  distance,
+  isOpen,
+  selected,
+  onSelect,
+}: CafeCardProps) {
+
   return (
-    <div className="bg-[#111] border border-gray-800 rounded-2xl p-6 hover:border-gray-600 transition">
 
-      <div className="flex items-center justify-between">
+    <div
+      onClick={onSelect}
+      className={`p-6 rounded-3xl border cursor-pointer transition
+      ${
+        selected
+          ? "border-green-500 bg-green-500/10"
+          : "border-gray-800 bg-[#111] hover:border-gray-600"
+      }`}
+    >
 
-        <h2 className="text-2xl font-semibold">
-          {props.name}
-        </h2>
+      {/* =========================
+          Top Section
+      ========================= */}
+      <div className="flex items-start justify-between">
 
-        <span className="bg-white text-black px-3 py-1 rounded-lg text-sm font-bold">
-          ⭐ {props.rating}
-        </span>
+        <div>
+
+          <h2 className="text-2xl font-bold">
+            {name}
+          </h2>
+
+          <p className="text-gray-400 mt-2">
+            {location}
+          </p>
+
+        </div>
+
+        {/* Rating */}
+        <div className="bg-black px-3 py-1 rounded-xl border border-gray-700">
+
+          ⭐ {rating}
+
+        </div>
 
       </div>
 
-      <p className="text-gray-400 mt-3">
-        {props.location}
-      </p>
+      {/* =========================
+          Bottom Section
+      ========================= */}
+      <div className="flex items-center justify-between mt-6">
 
-      <div className="flex gap-3 mt-6">
+        {/* Distance */}
+        <p className="text-sm text-gray-400">
+          📍 {distance}
+        </p>
 
-        <button className="bg-white text-black px-5 py-2 rounded-xl font-semibold">
-          Visit
-        </button>
-
-        <button className="border border-gray-700 px-5 py-2 rounded-xl">
-          Details
-        </button>
+        {/* Open / Closed */}
+        <div
+          className={`px-3 py-1 rounded-xl text-sm font-medium
+          ${
+            isOpen
+              ? "bg-green-500/20 text-green-400"
+              : "bg-red-500/20 text-red-400"
+          }`}
+        >
+          {isOpen ? "Open" : "Closed"}
+        </div>
 
       </div>
 
     </div>
+
   );
+
 }
